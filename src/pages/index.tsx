@@ -2,6 +2,7 @@ import React from "react";
 
 import { getSession, GetSessionParams, useSession } from "next-auth/react";
 import PageLayout from "@components/Layout/PageLayout";
+import PostCard from "@components/UI/PostCard";
 
 type Props = {
   isAuthenticated: boolean;
@@ -11,8 +12,8 @@ const Home = ({ isAuthenticated }: Props) => {
   const session = useSession();
 
   return (
-    <PageLayout isAuthenticated={isAuthenticated} >
-      <h1>{session.data?.user?.name}</h1>
+    <PageLayout className="flex flex-col items-center pt-5" isAuthenticated={isAuthenticated} >
+      <PostCard />
     </PageLayout>
   )
 }

@@ -16,7 +16,7 @@ const NavLinks = ({ isMobile = true, className }: Props) => {
         <Link href="https://google.com">Home</Link>
       </ListItem>
       <ListItem >
-        <Link href="https://google.com">Posts</Link>
+        <Link href="https://google.com">New</Link>
       </ListItem>
       <ListItem>
         <Link href="https://google.com">Profile</Link>
