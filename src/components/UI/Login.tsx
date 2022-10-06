@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from 'next/router'
 import Link from "next/link"
+import axios, { AxiosError } from "axios";
 
 // Yup and formik
 import * as Yup from "yup";
@@ -7,44 +9,49 @@ import { Formik, Form } from "formik";
 
 // MUI imports
 import GoogleIcon from '@mui/icons-material/Google';
-import { Button, ButtonGroup } from "@mui/material";
+import { Button, ButtonGroup, Alert } from "@mui/material";
 
 // Local components
 import TextField from "./TextField";
 import { signIn } from "next-auth/react";
+import { loginInitialValues, loginValidationScheme, LoginValuesType, registerIntialValues, registerValidationScheme, RegisterValuesType } from "schema/LoginSchema";
 
 type Props = {
   isRegister?: boolean;
 }
 
 const Login = ({ isRegister }: Props) => {
-  const loginValidationScheme = Yup.object({
-    email: Yup.string().email("Invalid email address").required("Email is required."),
-    password: Yup.string().required("Password is required.").min(6, "Password must be at least 8 characters.")
-  })
-
-  const loginInitialValues = {
-    email: "",
-    password: ""
-  };
-
-  const registerValidationScheme = Yup.object({
-    name: Yup.string().required("Name is required."),
-    email: Yup.string().email("Invalid email address").required("Email is required."),
-    password: Yup.string().required("Password is required.").min(6, "Password must be at least 8 characters."),
-    confirmPassword: Yup.string().required("Confirm password is required.").oneOf([Yup.ref("password"), null], "Passwords must match.")
-  })
-
-  const registerIntialValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  };
-  type RegisterValuesType = typeof registerIntialValues;
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const signInGoogle = () => {
     signIn("google", { callbackUrl: "/" })
+  }
+
+  const registerNewUser = async (registerValues: RegisterValuesType) => {
+    try {
+      const res = await axios.post("/api/auth/register", registerValues);
+    } catch (error: any) {
+      const err = error as AxiosError;
+
+      if (err.response?.status === 403) {
+        setError("This user already exists.")
+      }
+    }
+  }
+
+  const signInWithAccount = async (values: LoginValuesType) => {
+    const res = await signIn("credentials", { redirect: false, email: values.email, password: values.password })
+
+    if (res?.error === "invalid credentials") {
+      setError("Sorry your password does not match our records.")
+    } else if (res?.error === "User not found") {
+      setError("Sorry we could not find a user with that email.")
+    }
+
+    if (res?.ok) {
+      router.push("/");
+    }
   }
 
 
@@ -53,6 +60,13 @@ const Login = ({ isRegister }: Props) => {
       <div className="text-white text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
         <h1>{isRegister ? "Sign Up" : "Sign In"}</h1>
       </div>
+
+
+      {error && (
+        <div className="w-full flex justify-center mb-5">
+          <Alert className="w-[80%] md:w-[50%] lg:w-[35%] xl:w-[25%]" severity="error">{error}</Alert>
+        </div>
+      )}
 
       <div className="flex justify-center mb-5 w-full">
         <div className="w-[80%] md:w-[50%] lg:w-[35%] xl:w-[25%]">
@@ -67,10 +81,10 @@ const Login = ({ isRegister }: Props) => {
         onSubmit={(values, { setSubmitting }) => {
           setTimeout(() => {
             if (!isRegister) {
-              signIn("credentials", { redirect: true, email: values.email, password: values.password })
+              signInWithAccount(values);
             } else {
               const registerValues = values as RegisterValuesType;
-              console.log(registerValues);
+              registerNewUser(registerValues);
             }
 
             setSubmitting(false);
@@ -101,7 +115,7 @@ const Login = ({ isRegister }: Props) => {
             )}
 
             <ButtonGroup className="w-[80%] flex gap-2 md:w-[50%] lg:w-[35%] xl:w-[25%]" variant="contained">
-              <Link href={isRegister ? "/login" : "/register"}>
+              <Link href={isRegister ? "/auth/login" : "/auth/register"}>
                 <Button style={{ backgroundColor: "#4F46E5" }} className="w-full" variant="contained">{isRegister ? "Or Sign In" : "No Account?"}</Button>
               </Link>
               <Button style={{ backgroundColor: "#4F46E5" }} className="w-full" type="submit" variant="contained">{isRegister ? "Sign Up" : "Sign In"}</Button>

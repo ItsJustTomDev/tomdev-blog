@@ -1,6 +1,8 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import query from "lib/db";
+import bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,18 +13,34 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Login",
       credentials: {
-        username: {},
+        email: {},
         password: {}
       },
       async authorize(credentials) {
-        const user = { id: 1, name: "J Smith", email: "kekw@gmail.com" };
 
-        return user;
+        if (credentials) {
+          const user = await query({
+            query: "SELECT * FROM users WHERE email = ?",
+            values: [credentials.email]
+          }) as Array<any>;
+
+          if (user.length > 0) {
+            const passwordMatch = await bcrypt.compare(credentials.password, user[0].password);
+
+            if (passwordMatch) {
+              return user[0];
+            }
+
+            throw new Error("invalid credentials");
+          }
+        }
+
+        throw new Error("User not found");
       }
     }),
   ],
   pages: {
-    signIn: "/login"
+    signIn: "/auth/login"
   },
   callbacks: {
     async jwt({ token, account }) {
@@ -32,6 +50,11 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken;
+      session.idToken = token.idToken;
+      return session;
+    }
   },
   secret: process.env.NEXTAUTH_SECRET
 }

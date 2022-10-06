@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { List, ListItem } from "@mui/material"
+import { signOut } from "next-auth/react";
 
 
 type Props = {
@@ -19,6 +20,9 @@ const NavLinks = ({ isMobile = true, className }: Props) => {
       </ListItem>
       <ListItem>
         <Link href="https://google.com">Profile</Link>
+      </ListItem>
+      <ListItem>
+        <h1 className="cursor-pointer" onClick={() => signOut()}>Logout</h1>
       </ListItem>
     </List>
   )
