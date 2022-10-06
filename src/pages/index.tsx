@@ -1,13 +1,17 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import React from "react";
 
-const Home: NextPage = () => {
+import { signOut, useSession } from "next-auth/react";
+import { Button } from "@mui/material"
+
+const Home = () => {
+  const session = useSession();
+
   return (
     <div>
-      <h1>hello world!</h1>
+      <h1>hello world {session.data?.user?.name}</h1>
+      <Button variant="contained" onClick={() => signOut()}>Sign Out</Button>
     </div>
   )
 }
 
-export default Home
+export default Home;

@@ -16,7 +16,7 @@ const Navbar = ({ isLoggedIn = false }: Props) => {
 
   return (
     <div className="w-full bg-indigo-600 h-24 px-6 flex items-center justify-between md:px-12 lg:px-16">
-      <h1 className="text-3xl font-bold text-white">TomDev Blog</h1>
+      <h1 className="text-3xl font-bold text-white md:text-4xl">TomDev Blog</h1>
 
       {isLoggedIn && (
         <>
