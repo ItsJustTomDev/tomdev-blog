@@ -24,14 +24,24 @@ const Login = ({ isRegister }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const signInGoogle = () => {
-    signIn("google", { callbackUrl: "/" })
+  const signInGoogle = async () => {
+    const res = await signIn("google", { redirect: false, });
+
+    if (res?.ok) return router.push("/");
   }
 
   const registerNewUser = async (registerValues: RegisterValuesType) => {
     try {
       const res = await axios.post("/api/auth/register", registerValues);
-    } catch (error: any) {
+
+      if (res.status === 201) {
+        const loginRes = await signIn("credentials", { redirect: false, email: registerValues.email, password: registerValues.password })
+
+        if (loginRes?.ok) return router.push("/");
+      }
+
+
+    } catch (error: unknown) {
       const err = error as AxiosError;
 
       if (err.response?.status === 403) {
@@ -54,13 +64,11 @@ const Login = ({ isRegister }: Props) => {
     }
   }
 
-
   return (
     <div className="w-full h-full bg-slate-800 rounded-lg shadow-2xl">
       <div className="text-white text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
         <h1>{isRegister ? "Sign Up" : "Sign In"}</h1>
       </div>
-
 
       {error && (
         <div className="w-full flex justify-center mb-5">

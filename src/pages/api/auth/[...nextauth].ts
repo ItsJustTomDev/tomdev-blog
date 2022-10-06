@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import query from "lib/db";
 import bcrypt from "bcrypt";
+import { UserType } from "types/User";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,7 +23,7 @@ export const authOptions: NextAuthOptions = {
           const user = await query({
             query: "SELECT * FROM users WHERE email = ?",
             values: [credentials.email]
-          }) as Array<any>;
+          }) as UserType[]; // TODO make user type!!!!!
 
           if (user.length > 0) {
             const passwordMatch = await bcrypt.compare(credentials.password, user[0].password);
@@ -56,7 +57,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     }
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 export default NextAuth(authOptions)

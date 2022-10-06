@@ -1,9 +1,7 @@
 import React from "react";
 
-import { getSession, GetSessionParams, signOut, useSession } from "next-auth/react";
-import { Button } from "@mui/material"
+import { getSession, GetSessionParams, useSession } from "next-auth/react";
 import PageLayout from "@components/Layout/PageLayout";
-
 
 type Props = {
   isAuthenticated: boolean;
@@ -14,7 +12,7 @@ const Home = ({ isAuthenticated }: Props) => {
 
   return (
     <PageLayout isAuthenticated={isAuthenticated} >
-
+      <h1>{session.data?.user?.name}</h1>
     </PageLayout>
   )
 }

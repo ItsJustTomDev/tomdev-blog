@@ -11,7 +11,7 @@ const db = mysql({
 
 type QueryType = {
   query: string;
-  values: Array<string>;
+  values: string[];
 }
 
 export default async function query({ query, values }: QueryType) {
