@@ -6,18 +6,18 @@ import '../styles/globals.css'
 import "tailwindcss/tailwind.css"
 
 interface Props extends AppProps {
-  pageProps: {
-    session: Session;
-    pageProps: AppProps;
-  }
+    pageProps: {
+        session: Session;
+        pageProps: AppProps;
+    }
 }
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: Props) {
-  return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  )
+    return (
+        <SessionProvider session={session}>
+            <Component {...pageProps} />
+        </SessionProvider>
+    )
 }
 
 export default MyApp

@@ -9,12 +9,12 @@ const db = mysql({
   }
 });
 
-type QueryType = {
+type Props = {
   query: string;
   values: string[];
 }
 
-export default async function query({ query, values }: QueryType) {
+export default async function query({ query, values }: Props) {
   try {
     const results = await db.query(query, values);
     await db.end();

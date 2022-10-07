@@ -2,18 +2,18 @@
 *,
 *::after,
 *::before {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body,
 #__next {
-  @apply font-mono;
+    @apply font-mono;
 
-  height: 100vh;
+    height: 100vh;
 }
 
 /* Tailwind */
