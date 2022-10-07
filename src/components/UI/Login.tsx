@@ -46,6 +46,8 @@ const Login = ({ isRegister }: Props) => {
 
       if (err.response?.status === 403) {
         setError("This user already exists.")
+      } else if (err.response?.status === 500) {
+        setError("Something went wrong, please try again later.")
       }
     }
   }
@@ -85,7 +87,8 @@ const Login = ({ isRegister }: Props) => {
       <Formik
         initialValues={isRegister ? registerIntialValues : loginInitialValues}
         validationSchema={isRegister ? registerValidationScheme : loginValidationScheme}
-
+        validateOnChange={false}
+        validateOnBlur={false}
         onSubmit={(values, { setSubmitting }) => {
           setTimeout(() => {
             if (!isRegister) {

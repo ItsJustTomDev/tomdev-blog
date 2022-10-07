@@ -2,39 +2,24 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from "bcrypt"
 import query from 'lib/db';
 import { UserType } from 'types/User';
+import { registerValidationScheme } from 'schema/LoginSchema';
+import { InsertQueryType } from 'types/Query';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { name, email, password, confirmPassword } = req.body;
+  const validatedResult = await registerValidationScheme.validate(req.body);
+  if (!validatedResult) return res.status(400).send({ success: false, message: "Invalid data" });
 
-  if (!name || !email || !password || !confirmPassword) {
-    return res.status(422).json({ success: false, message: "Please enter all fields" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ success: false, message: "Method not allowed" });
 
-  if (password !== confirmPassword) {
-    return res.status(400).json({ success: false, message: "Passwords do not match" });
-  }
+  const existingUser = await query({ query: "SELECT * FROM users WHERE email = ?", values: [validatedResult.email] }) as UserType[];
+  if (existingUser.length > 0) return res.status(403).json({ success: false, message: "User already exists" });
 
-  try {
-    // Check if user exists
-    const existingUser = await query({
-      query: "SELECT * FROM users WHERE email = ?",
-      values: [email]
-    }) as UserType[];
+  const hashedPassword = bcrypt.hashSync(validatedResult.password, bcrypt.genSaltSync(256));
+  const inputNewUser = await query({
+    query: "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+    values: [validatedResult.name, validatedResult.email, hashedPassword]
+  }) as InsertQueryType;
 
-    if (existingUser.length > 0) {
-      return res.status(403).json({ success: false, message: "User already exists" });
-    }
-
-    const salt = bcrypt.genSaltSync(256);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
-    await query({
-      query: "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      values: [name, email, hashedPassword]
-    });
-
-    return res.status(201).json({ success: true, message: "User created successfully" });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error" });
-  }
+  if (inputNewUser.affectedRows === 1) return res.status(201).json({ success: true, message: "User created" });
+  return res.status(500).json({ success: false, message: "Internal server error" });
 }

@@ -17,7 +17,7 @@ export const registerValidationScheme = Yup.object({
   email: Yup.string().email("Invalid email address").required("Email is required."),
   password: Yup.string().required("Password is required.").min(6, "Password must be at least 8 characters."),
   confirmPassword: Yup.string().required("Confirm password is required.").oneOf([Yup.ref("password"), null], "Passwords must match.")
-})
+}).nullable();
 
 export const registerIntialValues = {
   name: "",

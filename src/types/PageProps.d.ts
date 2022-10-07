@@ -1,3 +1,3 @@
 export type PageProps = {
-  isAuthenticated: boolean
+  isAuthorized: boolean
 }
