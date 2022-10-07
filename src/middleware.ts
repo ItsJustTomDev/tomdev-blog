@@ -28,4 +28,4 @@ export default withAuth(
   }
 )
 
-export const config = { matcher: ["/", "/auth/login", "/auth/register"] }
+export const config = { matcher: ["/profile", "/new", "/auth/login", "/auth/register"] }

@@ -1,14 +1,13 @@
 import React from "react";
 
-import { getSession, GetSessionParams, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import PageLayout from "@components/Layout/PageLayout";
 import PostCard from "@components/UI/PostCard";
+import { isAuthenticated } from "util/isAuthenticated";
+import type { PageProps } from "types/PageProps";
 
-type Props = {
-  isAuthenticated: boolean;
-}
 
-const Home = ({ isAuthenticated }: Props) => {
+const Home = ({ isAuthenticated }: PageProps) => {
   const session = useSession();
 
   return (
@@ -18,23 +17,5 @@ const Home = ({ isAuthenticated }: Props) => {
   )
 }
 
-export async function getServerSideProps(context: GetSessionParams) {
-  const session = await getSession(context);
-
-  if (session) {
-    return {
-      props: {
-        isAuthenticated: true
-      }
-    }
-  }
-
-  return {
-    props: {
-      isAuthenticated: false
-    }
-  }
-
-}
-
+export const getServerSideProps = isAuthenticated();
 export default Home;

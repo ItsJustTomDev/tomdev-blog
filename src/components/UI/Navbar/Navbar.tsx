@@ -18,23 +18,19 @@ const Navbar = ({ isLoggedIn = false }: Props) => {
     <div className="w-full bg-indigo-600 h-24 px-6 flex items-center justify-between md:px-12 lg:px-16">
       <h1 className="text-3xl font-bold text-white md:text-4xl">TomDev Blog</h1>
 
-      {isLoggedIn && (
-        <>
-          <button className="md:hidden" onClick={() => setIsOpen(true)}>
-            <MenuIcon fontSize="large" htmlColor="white" />
-          </button>
+      <button className="md:hidden" onClick={() => setIsOpen(true)}>
+        <MenuIcon fontSize="large" htmlColor="white" />
+      </button>
 
-          <Drawer className="md:hidden" onClose={() => setIsOpen(false)} open={isOpen} anchor="top" PaperProps={{
-            sx: {
-              backgroundColor: "#334155"
-            }
-          }}>
-            <NavLinks isMobile={true} />
-          </Drawer>
+      <Drawer className="md:hidden" onClose={() => setIsOpen(false)} open={isOpen} anchor="top" PaperProps={{
+        sx: {
+          backgroundColor: "#334155"
+        }
+      }}>
+        <NavLinks isLoggedIn={isLoggedIn} isMobile />
+      </Drawer>
 
-          <NavLinks className="hidden md:flex" isMobile={false} />
-        </>
-      )}
+      <NavLinks isLoggedIn={isLoggedIn} className="hidden md:flex" isMobile={false} />
 
     </div>
   )
