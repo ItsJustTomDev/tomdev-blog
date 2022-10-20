@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import type { Session } from "next-auth";
 
 import '../styles/globals.css'
-import "tailwindcss/tailwind.css"
 
 interface Props extends AppProps {
     pageProps: {

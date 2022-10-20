@@ -3,16 +3,22 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { secureAPI } from "auth/secure-api";
 import { Query } from "types/query";
 import { Post } from "types/post";
-import { newPostValidationScheme } from "@components/ui/new-post";
+import { newPostValidationScheme } from "../../../pages/posts/new";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method === "POST")
+        secureAPI(createPost)(req, res);
+
+    if (req.method === "GET")
+        await getPosts(req, res);
+
+}
+
+const createPost = async (req: NextApiRequest, res: NextApiResponse) => {
     const validatedResult = await newPostValidationScheme.validate(req.body);
 
     if (!validatedResult)
         return res.status(400).send({ success: false, message: "Invalid data" });
-
-    if (req.method !== "POST")
-        return res.status(405).json({ success: false, message: "Method not allowed" });
 
     let slug = validatedResult.title.toLowerCase().replace(/ /g, "-");
 
@@ -37,4 +43,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(201).json({ success: true, message: "Post created" });
 }
 
-export default secureAPI(handler); 
+const getPosts = async (req: NextApiRequest, res: NextApiResponse) => {
+    const { slug } = req.query;
+
+    const resPosts = await query({
+        query: "SELECT * FROM posts WHERE slug = ?",
+        values: [slug as string]
+    }) as Post[];
+
+    if (resPosts.length <= 0)
+        return res.status(404).json({ success: false, message: "Post not found" });
+
+    return res.status(200).json({ success: true, data: resPosts[0] });
+}
+
+export default handler; 

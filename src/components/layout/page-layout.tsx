@@ -12,7 +12,7 @@ const PageLayout = ({ children, className, isAuthorized = false }: PropsWithChil
             <div className="w-full">
                 <Navbar isLoggedIn={isAuthorized} />
             </div>
-            <div className={`h-full bg-slate-600 ${className}`}>
+            <div className={`h-full bg-slate-200 ${className}`}>
                 {children}
             </div>
         </div>
