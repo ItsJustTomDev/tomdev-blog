@@ -51,8 +51,17 @@ const getPosts = async (req: NextApiRequest, res: NextApiResponse) => {
         values: [slug as string]
     }) as Post[];
 
-    if (resPosts.length <= 0)
-        return res.status(404).json({ success: false, message: "Post not found" });
+    if (resPosts.length <= 0) {
+        const allPosts = await query({
+            query: "SELECT * FROM posts",
+            values: []
+        }) as Post[];
+
+        if (!allPosts)
+            return res.status(500).json({ success: false, message: "Internal server error" });
+
+        return res.status(200).json({ success: true, posts: allPosts });
+    }
 
     return res.status(200).json({ success: true, data: resPosts[0] });
 }

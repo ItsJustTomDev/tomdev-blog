@@ -3,13 +3,28 @@ import { GetServerSideProps } from "next"
 import { Post } from "types/post";
 import axios, { AxiosError } from "axios";
 import PageLayout from "@components/layout/page-layout";
+import ReactMarkdown from "react-markdown";
 
+interface Props extends Post {
+    post: {
+        data: Post
+    }
+}
 
-const PostPage = () => {
+const PostPage = ({ post }: Props) => {
     return (
-        <PageLayout>
+        <PageLayout className="flex items-center flex-col font-sans gap-5">
+            <div className="font-sans flex flex-col items-center gap-2 mt-5">
+                <h1 className="text-5xl">{post.data.title}</h1>
+                <p>Author: {post.data.author}</p>
+            </div>
 
-        </PageLayout>
+            <div className="break-words w-full flex justify-center">
+                <ReactMarkdown className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
+                    {post.data.content}
+                </ReactMarkdown>
+            </div >
+        </PageLayout >
     )
 }
 

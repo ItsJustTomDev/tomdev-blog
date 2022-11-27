@@ -21,9 +21,6 @@ const NavLinks = ({ isMobile = true, className, isLoggedIn }: Props) => {
             <ListItem >
                 <Link href="/posts/new">New</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/profile">Profile</Link>
-            </ListItem>
             {isLoggedIn ? (
                 <ListItem>
                     <h1 className="cursor-pointer" onClick={() => signOut()}>Logout</h1>

@@ -50,8 +50,8 @@ const Login = () => {
 
     return (
         <PageLayout className="flex justify-center py-8 px-4">
-            <div className="w-full h-full bg-slate-800 rounded-lg shadow-2xl">
-                <div className="text-white text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
+            <div className="w-full h-full rounded-lg shadow-2xl">
+                <div className="text-slate-800 text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
                     <h1>Sign In</h1>
                 </div>
 
@@ -84,7 +84,7 @@ const Login = () => {
 
                         <div className="w-full flex flex-col items-center gap-2">
 
-                            <Button variant="text" style={{ color: "white", textDecoration: "underline", cursor: "pointer" }}>Forgot your password?</Button>
+                            <Button variant="text" style={{ color: "rgb(30 41 59)", textDecoration: "underline", cursor: "pointer" }}>Forgot your password?</Button>
 
 
                             <ButtonGroup className="w-[80%] flex gap-2 md:w-[50%] lg:w-[35%] xl:w-[25%]" variant="contained">

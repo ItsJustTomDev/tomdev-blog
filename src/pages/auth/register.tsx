@@ -65,8 +65,8 @@ const Register = () => {
 
     return (
         <PageLayout className="flex justify-center py-8 px-4">
-            <div className="w-full h-full bg-slate-800 rounded-lg shadow-2xl">
-                <div className="text-white text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
+            <div className="w-full h-full rounded-lg shadow-2xl">
+                <div className="text-slate-800 text-4xl flex justify-center py-5 md:text-5xl md:mb-3">
                     <h1>Sign Up</h1>
                 </div>
 

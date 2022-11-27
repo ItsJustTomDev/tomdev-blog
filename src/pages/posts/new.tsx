@@ -39,7 +39,8 @@ const New = ({ isAuthorized, userSession }: PageProps) => {
         try {
             const res = await axios.post("/api/posts", values);
             if (res.status === 201) {
-                router.push("/");
+                const slug = values.title.toLowerCase().replace(/ /g, "-");
+                router.push("/posts/" + slug);
             }
         } catch (error) {
             const err = error as AxiosError;
@@ -67,7 +68,7 @@ const New = ({ isAuthorized, userSession }: PageProps) => {
                     <div className="flex flex-col gap-4 flex-1 lg:flex-grow-0 w-[80%] md:w-[50%] lg:w-[40%]">
                         <TextField name="title" type="text" placeholder="Title" label="Name your post!" />
                         <TextField name="about" minRows={5} multiline placeholder="About" label="What is this post about?" />
-                        <TextField name="content" minRows={10} multiline placeholder="Your text here..." label="Write your post with markup!" />
+                        <TextField name="content" minRows={10} multiline placeholder="Your text here..." label="Write your post with markdown!" />
                     </div>
 
                     <div className="flex justify-center w-full">

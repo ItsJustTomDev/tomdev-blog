@@ -21,10 +21,12 @@
     "next-auth": "^4.12.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-markdown": "^8.0.3",
     "serverless-mysql": "^1.5.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.7",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "18.8.0",
